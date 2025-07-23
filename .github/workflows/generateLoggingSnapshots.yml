@@ -1,4 +1,4 @@
-name: Generate SCPI docs
+name: Generate Logging Snapshots
 on:
   push:
     branches:
