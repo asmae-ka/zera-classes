@@ -85,7 +85,7 @@ jobs:
         run: |
           cd $HOME/targetbuild/logging-snapshots/app
           ./logging-snapshots
-          mv $HOME/targetbuild/scpi-doc/app/snapshots $HOME/snapshots
+          mv $HOME/targetbuild/logging-snapshots/app/snapshots $HOME/snapshots
           ls $HOME/
 
       - name: Tar snapshots
