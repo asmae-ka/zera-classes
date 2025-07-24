@@ -86,7 +86,6 @@ jobs:
           cd $HOME/targetbuild/logging-snapshots/app
           ./logging-snapshots
           mv $HOME/targetbuild/logging-snapshots/app/snapshots $HOME/snapshots
-          ls $HOME/
 
       - name: Tar snapshots
         run: |
@@ -95,6 +94,17 @@ jobs:
       - name: 'Upload snapshots artifact'
         uses: actions/upload-artifact@v4
         with:
-          name: snapshots-artifact
+          name: snapshots
           path: /github/home/snapshots.tar.xz
           retention-days: 1
+
+      - name: 'Trigger workflow'
+        uses: convictional/trigger-workflow-and-wait@v1.4.0
+        with:
+          owner: asmae-ka
+          repo: reportjs-vue
+          github_token: ${{ secrets.G_TRIGGER_WORKFLOW }}
+          workflow_file_name: downloadSnapshots.yml
+          ref: master
+          wait_workflow: false
+          propagate_failure: false
