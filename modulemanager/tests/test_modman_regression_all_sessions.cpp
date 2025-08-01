@@ -38,7 +38,7 @@ void test_modman_regression_all_sessions::allSessionsVeinDumps()
     QFETCH(QString, sessionFileName);
     QByteArray jsonExpected = TestLogHelpers::loadFile(QString(":/veinDumps/%1").arg(sessionFileName));
     QByteArray jsonDumped = m_veinDumps.value(sessionFileName);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 
 void test_modman_regression_all_sessions::uniqueEntityNameEntityIdPairsCom5003()
@@ -56,7 +56,7 @@ void test_modman_regression_all_sessions::uniqueEntityNameEntityIdPairsMt581s2()
     QVERIFY(checkUniqueEntityIdNames("mt581s2"));
 }
 
-void test_modman_regression_all_sessions::testGenerateScpiDocs()
+void test_modman_regression_all_sessions::testGenerateScpiDocs_data()
 {
     QString htmlOutPath = QStringLiteral(HTML_DOCS_PATH_TEST) + "html-docs/";
     QString sessionMapJsonPath = QStringLiteral(HTML_DOCS_PATH_TEST) + "SessionNamesMapping.json";
@@ -72,6 +72,16 @@ void test_modman_regression_all_sessions::testGenerateScpiDocs()
     QDir htmlDir(htmlOutPath);
     htmlDir.setFilter(QDir::Files);
     QCOMPARE(htmlDir.count(), totalHtmlFiles);
+
+    QTest::addColumn<QString>("htmlFilePath");
+    for(auto &fileInfo: htmlDir.entryInfoList())
+        QTest::newRow(fileInfo.fileName().toLatin1()) << fileInfo.absolutePath();
+}
+
+void test_modman_regression_all_sessions::testGenerateScpiDocs()
+{
+    QFETCH(QString, htmlFilePath);
+    QVERIFY(QFileInfo(htmlFilePath).size() > 0);
 }
 
 void test_modman_regression_all_sessions::testGenerateSnapshots_data()
@@ -91,7 +101,7 @@ void test_modman_regression_all_sessions::testGenerateSnapshots()
     QFETCH(QString, snapshotName);
     QByteArray jsonExpected = TestLogHelpers::loadFile(QString(":/snapshots/%1").arg(snapshotName));
     QByteArray jsonDumped = TestLogHelpers::loadFile(QString(m_snapshotJsonsPath + "%1").arg(snapshotName));
-    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 
 void test_modman_regression_all_sessions::checkObjectsProperlyDeleted()
